@@ -1,0 +1,26 @@
+{
+  "name": "pos-system",
+  "version": "1.0.0",
+  "description": "Demo Shop — Offline-First POS System",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend",
+    "database"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "db:migrate": "cd database && npm run migrate",
+    "db:seed": "cd database && npm run seed",
+    "db:generate": "cd database && npm run generate",
+    "db:studio": "cd database && npm run studio",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install && cd ../database && npm install",
+    "build": "cd frontend && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "electron": "^44.0.0"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "shopName": "Smart Buy ",
+  "shopSubtitle": "Daily Fresh & Grocery",
+  "shopAddress": "Road 4, House 12, Dhanmondi, Dhaka",
+  "shopPhone": "01711-223344",
+  "vatRegNo": "VAT-99887766-01",
+  "receiptFooter": "*** THANKS FOR VISITING SMART BUY ***",
+  "receiptReturnPolicy": "Return within 7 days",
+  "shopLogo": "",
+  "backupSchedule": "0 2 * * *",
+  "lowStockThreshold": 10
+}

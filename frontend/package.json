@@ -1,0 +1,82 @@
+{
+  "name": "pos-frontend",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Demo Shop POS — Cross-Platform Desktop App (Mac & Windows)",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "electron": "electron .",
+    "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
+    "build:mac": "vite build && electron-builder --mac",
+    "build:win": "vite build && electron-builder --win",
+    "build:all": "vite build && electron-builder -mw",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "axios": "^1.6.7",
+    "chart.js": "^4.4.2",
+    "date-fns": "^3.3.1",
+    "jsbarcode": "^3.11.6",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.1",
+    "react-router-dom": "^6.22.2",
+    "recharts": "^2.12.1",
+    "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.61",
+    "@types/react-dom": "^18.2.19",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.17",
+    "concurrently": "^8.2.2",
+    "electron": "^44.0.0",
+    "electron-builder": "^24.13.3",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "vite": "^5.1.4",
+    "wait-on": "^7.2.0"
+  },
+  "build": {
+    "appId": "com.demoshop.pos",
+    "productName": "Demo Shop POS",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../backend",
+        "to": "backend",
+        "filter": [
+          "**/*",
+          "!backups/*"
+        ]
+      }
+    ],
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.business"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}

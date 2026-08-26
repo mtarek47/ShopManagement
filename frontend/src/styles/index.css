@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    @apply bg-slate-100 text-slate-900 font-sans antialiased selection:bg-indigo-500 selection:text-white;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+}
+
+@layer components {
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg font-semibold text-xs tracking-wide transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-1 active:translate-y-[1px] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:translate-y-0 select-none;
+  }
+  .btn-primary {
+    @apply btn bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500 shadow-soft-sm;
+  }
+  .btn-secondary {
+    @apply btn bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-slate-900 focus:ring-slate-400 shadow-soft-sm;
+  }
+  .btn-success {
+    @apply btn bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-500 shadow-soft-sm;
+  }
+  .btn-danger {
+    @apply btn bg-rose-600 text-white hover:bg-rose-700 focus:ring-rose-500 shadow-soft-sm;
+  }
+
+  /* Form Inputs (Pure White with Crisp Slate Border) */
+  .input {
+    @apply w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-lg text-slate-900 placeholder:text-slate-400 transition-all duration-150 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/15 disabled:bg-slate-100 disabled:text-slate-500;
+  }
+  .label-title {
+    @apply block text-xs font-bold text-slate-700 mb-1 tracking-wide;
+  }
+
+  /* White Surface Cards */
+  .card {
+    @apply bg-white border border-slate-200/90 rounded-xl p-5 shadow-soft-sm;
+  }
+  .card-header {
+    @apply flex justify-between items-center pb-3 mb-4 border-b border-slate-100;
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-mono text-[10px] font-bold tracking-wide uppercase border;
+  }
+  .badge-green {
+    @apply badge bg-emerald-50 text-emerald-700 border-emerald-200;
+  }
+  .badge-red {
+    @apply badge bg-rose-50 text-rose-700 border-rose-200;
+  }
+  .badge-yellow {
+    @apply badge bg-amber-50 text-amber-700 border-amber-200;
+  }
+  .badge-blue {
+    @apply badge bg-indigo-50 text-indigo-700 border-indigo-200;
+  }
+  .badge-gray {
+    @apply badge bg-slate-100 text-slate-700 border-slate-200;
+  }
+
+  /* Keyboard shortcut hint badge */
+  .kbd-badge {
+    @apply inline-flex items-center px-1.5 py-0.5 font-mono text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-300 rounded shadow-soft-sm tracking-wider;
+  }
+}
+
+/* Custom Clean Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Thermal Slip & A4 Statement Print Styles */
+@media print {
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  /* Thermal Slip Specifics */
+  #thermal-receipt-print, #thermal-receipt-print *,
+  #printable-thermal-audit-slip, #printable-thermal-audit-slip * {
+    visibility: visible;
+  }
+
+  #thermal-receipt-print,
+  #printable-thermal-audit-slip {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 78mm !important;
+    max-width: 80mm !important;
+    margin: 0 !important;
+    padding: 2mm 3mm !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  /* A4 Executive Monthly Statement Specifics */
+  #printable-monthly-statement, #printable-monthly-statement * {
+    visibility: visible;
+  }
+
+  #printable-monthly-statement {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 10mm 15mm !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}

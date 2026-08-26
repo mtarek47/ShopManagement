@@ -1,0 +1,20 @@
+{
+  "name": "pos-database",
+  "version": "1.0.0",
+  "scripts": {
+    "migrate": "prisma migrate dev --schema=schema.prisma",
+    "migrate:prod": "prisma migrate deploy --schema=schema.prisma",
+    "generate": "prisma generate --schema=schema.prisma",
+    "seed": "node seeders/seed.js",
+    "studio": "prisma studio --schema=schema.prisma",
+    "reset": "prisma migrate reset --schema=schema.prisma"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.10.0",
+    "bcryptjs": "^2.4.3",
+    "prisma": "^5.10.0"
+  },
+  "devDependencies": {
+    "pg": "^8.23.0"
+  }
+}

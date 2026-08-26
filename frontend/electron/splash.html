@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      color: white;
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .logo-container {
+      width: 68px;
+      height: 68px;
+      background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5);
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: 24px;
+      margin: 0 0 6px;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      background: linear-gradient(to right, #ffffff, #c7d2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p {
+      font-size: 13px;
+      color: #94a3b8;
+      margin: 0 0 24px;
+      font-weight: 500;
+    }
+    .loader-bar {
+      width: 140px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+    .loader-bar::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 50%;
+      background: linear-gradient(90deg, #6366f1, #10b981);
+      border-radius: 999px;
+      animation: indeterminate 1.2s infinite ease-in-out;
+    }
+    @keyframes indeterminate {
+      0% { left: -50%; width: 50%; }
+      50% { left: 25%; width: 60%; }
+      100% { left: 100%; width: 50%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-container">🛍️</div>
+  <h1>Smart Buy</h1>
+  <p>Offline-First POS System • Launching...</p>
+  <div class="loader-bar"></div>
+</body>
+</html>
