@@ -9,11 +9,26 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Starting database seed with full grocery items...\n');
 
+  // ── Master Super Admin (Root Master Account) ────────────────────────────────
+  const superAdminHash = await bcrypt.hash('superadmin123', 12);
+  const masterSuperAdmin = await prisma.user.upsert({
+    where: { phone: '01999999999' },
+    update: { role: 'SUPER_ADMIN', isActive: true },
+    create: {
+      name: 'Master Super Admin',
+      phone: '01999999999',
+      passwordHash: superAdminHash,
+      role: 'SUPER_ADMIN',
+      isActive: true,
+    },
+  });
+  console.log(`👑 Master Super Admin: ${masterSuperAdmin.name} (${masterSuperAdmin.role}) — 01999999999 / superadmin123`);
+
   // ── Admin User ──────────────────────────────────────────────────────────────
   const passwordHash = await bcrypt.hash('admin123', 12);
   const admin = await prisma.user.upsert({
     where: { phone: '01700000000' },
-    update: {},
+    update: { role: 'ADMIN', isActive: true },
     create: {
       name: 'Admin',
       phone: '01700000000',

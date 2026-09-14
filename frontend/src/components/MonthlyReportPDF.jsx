@@ -207,7 +207,7 @@ export default function MonthlyReportPDF({
                     : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                📄 A4 Statement
+                A4 Statement
               </button>
               <button
                 type="button"
@@ -218,7 +218,7 @@ export default function MonthlyReportPDF({
                     : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                🧾 80mm Thermal Slip
+                80mm Thermal Slip
               </button>
             </div>
           </div>
@@ -228,9 +228,9 @@ export default function MonthlyReportPDF({
             <button
               onClick={handlePrint}
               disabled={loading}
-              className="btn-primary text-xs py-1.5 px-4 font-bold bg-slate-900 hover:bg-slate-800 text-white flex items-center gap-1.5 shadow-soft-sm"
+              className="btn-primary text-xs py-1.5 px-4 font-bold bg-slate-900 hover:bg-slate-800 text-white flex items-center gap-1.5 shadow-2xs"
             >
-              <span>🖨️ {printFormat === 'A4' ? 'Print A4 / Save PDF' : 'Print 80mm Thermal'}</span>
+              <span>{printFormat === 'A4' ? 'Print A4 / Save PDF' : 'Print 80mm Thermal'}</span>
             </button>
             <button
               onClick={onClose}

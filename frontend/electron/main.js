@@ -2,6 +2,7 @@ const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron')
 const path = require('path')
 const http = require('http')
 const { fork } = require('child_process')
+const PostgresManager = require('./postgres-manager')
 
 const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged
 const isMac = process.platform === 'darwin'
@@ -10,17 +11,44 @@ const isWindows = process.platform === 'win32'
 let mainWindow
 let splashWindow
 let backendProcess = null
+const postgresManager = new PostgresManager()
 
 /**
- * In Production (Packaged App), automatically spawn the Express backend
- * In Development, do nothing so developer can use nodemon / hot-reload!
+ * Configure automatic launch on Windows boot / laptop startup
  */
-function startPackagedBackend() {
+function configureAutoStartOnBoot() {
+  try {
+    if (!isDev) {
+      app.setLoginItemSettings({
+        openAtLogin: true,
+        openAsHidden: false,
+        name: 'Smart Buy POS System',
+      })
+      console.log('[Electron] ✅ Configured Windows Auto-Start on Laptop Boot (openAtLogin = true)')
+    }
+  } catch (err) {
+    console.warn('[Electron] Failed to set login item settings:', err.message)
+  }
+}
+
+/**
+ * In Production (Packaged App), automatically start embedded PostgreSQL & Express backend
+ */
+async function startPackagedServices() {
   if (isDev) {
     console.log('[Electron] Running in Development mode. Connecting to external backend on :5000')
     return
   }
 
+  // 1. Start portable PostgreSQL database on Windows
+  try {
+    console.log('[Electron] Checking and starting embedded database...')
+    await postgresManager.start()
+  } catch (err) {
+    console.error('[Electron] Database start warning:', err.message)
+  }
+
+  // 2. Start packaged Express backend
   try {
     const backendPath = app.isPackaged
       ? path.join(process.resourcesPath, 'backend', 'src', 'index.js')
@@ -227,9 +255,10 @@ async function waitForBackend(retries = 25, interval = 1200) {
 
 app.whenReady().then(async () => {
   setupApplicationMenu()
+  configureAutoStartOnBoot()
 
-  // 1. In production, start the bundled backend server
-  startPackagedBackend()
+  // 1. In production, start embedded PostgreSQL and backend server
+  await startPackagedServices()
 
   // 2. Show splash screen while waiting for backend
   if (!isDev) {
@@ -249,14 +278,17 @@ app.on('window-all-closed', () => {
   if (!isMac) app.quit()
 })
 
-// Clean up background server on exit
-app.on('before-quit', () => {
+// Clean up background server and PostgreSQL on exit
+app.on('before-quit', async () => {
   if (backendProcess) {
     console.log('[Electron] Terminating background server...')
     try {
       backendProcess.kill('SIGTERM')
     } catch (_) {}
   }
+  try {
+    await postgresManager.stop()
+  } catch (_) {}
 })
 
 // IPC: Cash drawer & printer support

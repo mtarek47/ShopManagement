@@ -51,11 +51,36 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, message: 'Internal server error', error: process.env.NODE_ENV === 'development' ? err.message : undefined });
 });
 
+// ─── Auto-seed Master Super Admin (Root Master Account) ────────────────────────
+async function ensureMasterSuperAdmin() {
+  try {
+    const bcrypt = require('bcryptjs');
+    const masterPhone = '01999999999';
+    const existing = await prisma.user.findUnique({ where: { phone: masterPhone } });
+    if (!existing) {
+      const passwordHash = await bcrypt.hash('superadmin123', 12);
+      await prisma.user.create({
+        data: {
+          name: 'Master Super Admin',
+          phone: masterPhone,
+          passwordHash,
+          role: 'SUPER_ADMIN',
+          isActive: true,
+        },
+      });
+      console.log('👑 [Auth Seed] Auto-seeded Master Super Admin root account (01999999999 / superadmin123)');
+    }
+  } catch (err) {
+    console.error('Failed to ensure Master Super Admin:', err.message);
+  }
+}
+
 // ─── Start Server ─────────────────────────────────────────────────────────────
 async function start() {
   try {
     await prisma.$connect();
     console.log('✅ Database connected');
+    await ensureMasterSuperAdmin();
     initBackupCron();
     const { syncAllHistoricalAnalytics } = require('./services/analyticsLedger');
     syncAllHistoricalAnalytics().catch((e) => console.error('Initial analytics sync failed:', e));

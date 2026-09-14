@@ -60,15 +60,15 @@ const Icons = {
 }
 
 const navItems = [
-  { path: '/pos',        label: 'POS Counter',  icon: Icons.POS,       roles: ['ADMIN', 'MANAGER', 'CASHIER'], highlight: true },
-  { path: '/inventory',  label: 'Inventory',     icon: Icons.Inventory, roles: ['ADMIN', 'MANAGER', 'CASHIER'] },
-  { path: '/purchases',  label: 'Stock In / PO',icon: Icons.Purchases, roles: ['ADMIN', 'MANAGER'] },
-  { path: '/suppliers',  label: 'Suppliers',     icon: Icons.Suppliers, roles: ['ADMIN', 'MANAGER'] },
-  { path: '/customers',  label: 'Customers',     icon: Icons.Customers, roles: ['ADMIN', 'MANAGER', 'CASHIER'] },
-  { path: '/reports',    label: 'Analytics',     icon: Icons.Reports,   roles: ['ADMIN', 'MANAGER'] },
-  { path: '/shifts',     label: 'Cash Shifts',   icon: Icons.Shifts,    roles: ['ADMIN', 'MANAGER', 'CASHIER'] },
-  { path: '/employees',  label: 'Staff Access',  icon: Icons.Employees, roles: ['ADMIN'] },
-  { path: '/admin',      label: 'Settings',      icon: Icons.Admin,     roles: ['ADMIN'] },
+  { path: '/pos',        label: 'Billing Counter', icon: Icons.POS,       roles: ['ADMIN', 'MANAGER', 'CASHIER'], highlight: true },
+  { path: '/inventory',  label: 'Inventory',       icon: Icons.Inventory, roles: ['ADMIN', 'MANAGER', 'CASHIER'] },
+  { path: '/purchases',  label: 'Stock In / PO',   icon: Icons.Purchases, roles: ['ADMIN', 'MANAGER'] },
+  { path: '/suppliers',  label: 'Suppliers',       icon: Icons.Suppliers, roles: ['ADMIN', 'MANAGER'] },
+  { path: '/customers',  label: 'Customers',       icon: Icons.Customers, roles: ['ADMIN', 'MANAGER', 'CASHIER'] },
+  { path: '/reports',    label: 'Analytics',       icon: Icons.Reports,   roles: ['ADMIN', 'MANAGER'] },
+  { path: '/shifts',     label: 'Cash Shifts',     icon: Icons.Shifts,    roles: ['ADMIN', 'MANAGER', 'CASHIER'] },
+  { path: '/employees',  label: 'Staff Access',    icon: Icons.Employees, roles: ['ADMIN'] },
+  { path: '/admin',      label: 'Settings',        icon: Icons.Admin,     roles: ['ADMIN'] },
 ]
 
 export default function Layout() {
@@ -112,23 +112,23 @@ export default function Layout() {
 
   return (
     <div className="flex h-screen bg-slate-100 text-slate-900 overflow-hidden font-sans antialiased">
-      {/* Executive Dark Slate Sidebar */}
+      {/* Executive Neutral Gray/Graphite Sidebar (No Deep Blue) */}
       <aside
         className={`${
           sidebarOpen ? 'w-56' : 'w-16'
-        } bg-slate-900 border-r border-slate-800 text-white flex flex-col transition-all duration-150 shrink-0 select-none z-30`}
+        } bg-[#24292f] border-r border-[#323842] text-slate-100 flex flex-col transition-all duration-150 shrink-0 select-none z-30`}
       >
         {/* Brand Header */}
-        <div className="flex items-center justify-between p-3.5 border-b border-slate-800 bg-slate-950/40">
+        <div className="flex items-center justify-between p-3.5 border-b border-[#323842] bg-[#1c2128]/60">
           <div className="flex items-center gap-2.5 overflow-hidden">
             {shopSettings.shopLogo ? (
               <img
                 src={shopSettings.shopLogo}
                 alt="Logo"
-                className="w-8 h-8 rounded-lg object-cover shadow-soft-sm shrink-0 border border-slate-700 bg-white"
+                className="w-8 h-8 rounded-lg object-cover shadow-2xs shrink-0 border border-[#444c56] bg-white"
               />
             ) : (
-              <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-xs text-white shadow-soft-sm shrink-0 font-mono">
+              <div className="w-8 h-8 rounded-lg bg-[#3d444f] border border-[#444c56] flex items-center justify-center font-bold text-xs text-white shadow-2xs shrink-0 font-mono">
                 {initials}
               </div>
             )}
@@ -146,7 +146,7 @@ export default function Layout() {
           </div>
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-1 rounded text-slate-400 hover:text-white hover:bg-[#323842] transition-colors"
           >
             {sidebarOpen ? '◀' : '▶'}
           </button>
@@ -185,8 +185,8 @@ export default function Layout() {
                 className={({ isActive }) =>
                   `flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                     isActive
-                      ? 'bg-indigo-600 text-white font-semibold shadow-soft-sm'
-                      : 'text-slate-300 hover:bg-slate-800/70 hover:text-white'
+                      ? 'bg-[#373e47] text-white font-semibold shadow-2xs border border-[#444c56]'
+                      : 'text-slate-300 hover:bg-[#2d333b] hover:text-white'
                   }`
                 }
               >
@@ -198,20 +198,16 @@ export default function Layout() {
         </nav>
 
         {/* User Footer Card */}
-        <div className="p-3 border-t border-slate-800/80 bg-slate-950/30">
+        <div className="p-3 border-t border-[#323842] bg-[#1c2128]/60">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5 overflow-hidden">
-              <div className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs font-mono shrink-0 ${
-                user?.role === 'SUPER_ADMIN' ? 'bg-purple-600 text-white' : 'bg-slate-800 text-slate-300 border border-slate-700'
-              }`}>
+              <div className="w-7 h-7 rounded-lg bg-[#3d444f] border border-[#444c56] text-white flex items-center justify-center font-bold text-xs font-mono shrink-0">
                 {user?.name ? user.name[0].toUpperCase() : 'U'}
               </div>
               {sidebarOpen && (
                 <div className="min-w-0">
                   <div className="text-xs font-bold text-slate-200 truncate">{user?.name}</div>
-                  <div className={`text-[10px] font-semibold uppercase tracking-wider truncate ${
-                    user?.role === 'SUPER_ADMIN' ? 'text-purple-400' : 'text-slate-400'
-                  }`}>
+                  <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider truncate">
                     {user?.role}
                   </div>
                 </div>
@@ -220,7 +216,7 @@ export default function Layout() {
             {sidebarOpen && (
               <button
                 onClick={handleLogout}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-[#323842] transition-colors"
                 title="Sign Out"
               >
                 <Icons.Logout />

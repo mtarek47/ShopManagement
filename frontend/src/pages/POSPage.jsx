@@ -564,7 +564,7 @@ export default function POSPage() {
                 }}
                 className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition-all whitespace-nowrap ${
                   parseFloat(manualQty) === p.val
-                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-soft-sm font-bold'
+                    ? 'bg-[#24292f] text-white border-[#24292f] shadow-2xs font-bold'
                     : 'bg-slate-50 hover:bg-slate-200 text-slate-700 border-slate-200'
                 }`}
               >
@@ -579,8 +579,12 @@ export default function POSPage() {
           <div className="flex-1 overflow-y-auto p-3">
             {cart.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-slate-400 py-12">
-                <div className="w-16 h-16 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-3xl mb-2 shadow-soft-sm">
-                  🛒
+                <div className="w-14 h-14 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center mb-2 shadow-2xs text-slate-500">
+                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="9" cy="21" r="1" />
+                    <circle cx="20" cy="21" r="1" />
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                  </svg>
                 </div>
                 <p className="text-sm font-bold text-slate-700">Billing Cart is Empty</p>
                 <p className="text-xs text-slate-400 mt-0.5">
@@ -802,13 +806,13 @@ export default function POSPage() {
       </div>
 
       {/* ─── RIGHT: EXECUTIVE SUMMARY & FAST CHECKOUT ───────────────────────── */}
-      <div className="w-72 bg-slate-900 text-white flex flex-col justify-between p-5 shrink-0 shadow-2xl z-20">
+      <div className="w-72 bg-[#24292f] border-l border-[#323842] text-white flex flex-col justify-between p-5 shrink-0 shadow-2xl z-20">
         <div className="space-y-3">
-          <div className="border-b border-slate-800 pb-2 flex justify-between items-center">
+          <div className="border-b border-[#323842] pb-2 flex justify-between items-center">
             <h2 className="text-xs font-bold tracking-wider text-slate-300 uppercase">
               BILL SUMMARY
             </h2>
-            <span className="badge bg-slate-800 text-slate-300 font-mono text-[9px]">
+            <span className="badge bg-[#323842] text-slate-200 border border-[#444c56] font-mono text-[9px]">
               {cart.length} ITEMS
             </span>
           </div>
@@ -828,7 +832,7 @@ export default function POSPage() {
             )}
 
             {/* Prominent Net Payable Box */}
-            <div className="mt-3 p-3 bg-slate-950 border border-slate-800 rounded-xl">
+            <div className="mt-3 p-3 bg-[#1c2128] border border-[#323842] rounded-xl">
               <div className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">
                 Net Payable Amount
               </div>
@@ -851,7 +855,7 @@ export default function POSPage() {
                       setPayments([{ method: 'CASH', amount: amt.toString() }])
                       setShowPaymentModal(true)
                     }}
-                    className="py-1 px-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] font-mono font-bold text-slate-200 border border-slate-700 transition-colors"
+                    className="py-1 px-1 rounded bg-[#323842] hover:bg-[#3d444f] text-[11px] font-mono font-bold text-slate-200 border border-[#444c56] transition-colors"
                   >
                     ৳{amt}
                   </button>
@@ -862,7 +866,7 @@ export default function POSPage() {
         </div>
 
         {/* Action Buttons */}
-        <div className="space-y-2 pt-4 border-t border-slate-800">
+        <div className="space-y-2 pt-4 border-t border-[#323842]">
           <button
             onClick={() => {
               if (cart.length > 0) {
@@ -873,7 +877,7 @@ export default function POSPage() {
             disabled={cart.length === 0}
             className="btn-success w-full py-3 px-4 rounded-xl text-xs font-extrabold flex items-center justify-between shadow-lg disabled:opacity-40"
           >
-            <span>💳 Pay & Print Receipt</span>
+            <span>Pay & Print Receipt</span>
             <span className="kbd-badge bg-black/40 text-emerald-300 border-emerald-900 font-mono">F2</span>
           </button>
 
@@ -881,7 +885,7 @@ export default function POSPage() {
             <button
               onClick={clearCart}
               disabled={cart.length === 0}
-              className="btn bg-slate-800 hover:bg-rose-900/40 text-rose-300 border border-slate-700 text-xs py-1.5 rounded-lg disabled:opacity-30"
+              className="btn bg-[#323842] hover:bg-rose-900/40 text-rose-300 border border-[#444c56] text-xs py-1.5 rounded-lg disabled:opacity-30"
             >
               Clear [Esc]
             </button>
@@ -890,7 +894,7 @@ export default function POSPage() {
                 if (lastReceipt) setShowReceiptModal(true)
                 else toast.error('No recent sale receipt')
               }}
-              className="btn bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs py-1.5 rounded-lg"
+              className="btn bg-[#323842] hover:bg-[#3d444f] text-slate-200 border border-[#444c56] text-xs py-1.5 rounded-lg"
             >
               Reprint
             </button>

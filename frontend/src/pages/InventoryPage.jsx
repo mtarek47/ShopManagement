@@ -55,9 +55,29 @@ export default function InventoryPage() {
   const [showModal, setShowModal] = useState(false)
   const [editProduct, setEditProduct] = useState(null)
   const [form, setForm] = useState(EMPTY_PRODUCT)
+  const [unitQty, setUnitQty] = useState('1')
+  const [unitType, setUnitType] = useState('pcs')
   const [adjustModal, setAdjustModal] = useState(null)
   const [adjustForm, setAdjustForm] = useState({ qty: '', type: 'DAMAGE', reason: '' })
   const [saving, setSaving] = useState(false)
+
+  // Helper functions for smart unit parsing & formatting
+  const parseUnit = (unitStr) => {
+    if (!unitStr) return { qty: '1', type: 'pcs' }
+    const str = String(unitStr).trim()
+    const match = str.match(/^([\d\.]+)\s*(.*)$/)
+    if (match) {
+      return { qty: match[1], type: match[2].trim() || 'pcs' }
+    }
+    return { qty: '1', type: str || 'pcs' }
+  }
+
+  const combineUnit = (qty, type) => {
+    const cleanQty = String(qty || '').trim()
+    const cleanType = String(type || 'pcs').trim()
+    if (!cleanQty || cleanQty === '1') return cleanType
+    return `${cleanQty} ${cleanType}`
+  }
 
   // Fetch Alert counts
   const fetchAlertCounts = async () => {
@@ -136,6 +156,8 @@ export default function InventoryPage() {
   const openAdd = () => {
     setEditProduct(null)
     setForm(EMPTY_PRODUCT)
+    setUnitQty('1')
+    setUnitType('pcs')
     setBrandSuggestions([])
     setShowBrandSuggestions(false)
     setShowModal(true)
@@ -143,6 +165,9 @@ export default function InventoryPage() {
 
   const openEdit = (p) => {
     setEditProduct(p)
+    const parsed = parseUnit(p.unit)
+    setUnitQty(parsed.qty)
+    setUnitType(parsed.type)
     setForm({
       ...p,
       brandName: p.brand?.name || '',
@@ -236,8 +261,8 @@ export default function InventoryPage() {
       {/* ─── COMPACT RESPONSIVE HEADER ──────────────────────────────────────── */}
       <div className="flex justify-between items-center pb-2.5 border-b border-slate-200 flex-wrap gap-2.5">
         <div>
-          <h1 className="text-lg font-bold text-slate-900 flex items-center gap-1.5 leading-tight">
-            📦 Inventory Catalog
+          <h1 className="text-lg font-bold text-slate-900 leading-tight">
+            Inventory Catalog
           </h1>
           <p className="text-[11px] text-slate-500">
             Stock management, live barcode lookup, category sorting & expiry audit
@@ -246,7 +271,7 @@ export default function InventoryPage() {
 
         {/* Top Right Action & Alert Badges */}
         <div className="flex items-center gap-2 flex-wrap">
-          {/* ⏳ EXPIRING SOON ALERT BUTTON */}
+          {/* EXPIRING SOON ALERT BUTTON */}
           <button
             onClick={() => {
               if (filterExpiry === 'expiring_soon') {
@@ -254,18 +279,18 @@ export default function InventoryPage() {
                 toast.success('Cleared expiry filter')
               } else {
                 setFilterExpiry('expiring_soon')
-                toast('Filtered: Showing items expiring within 30 days', { icon: '⏳' })
+                toast.success('Filtered: Showing items expiring within 30 days')
               }
               setPage(1)
             }}
-            className={`px-2.5 py-1.5 rounded-xl border text-xs font-bold transition-all flex items-center gap-1.5 shadow-soft-sm ${
+            className={`px-2.5 py-1.5 rounded-lg border text-xs font-bold transition-all flex items-center gap-1.5 shadow-2xs ${
               filterExpiry === 'expiring_soon'
                 ? 'bg-amber-600 text-white border-amber-600 ring-2 ring-amber-300'
-                : 'bg-amber-50 hover:bg-amber-100 text-amber-800 border-amber-200'
+                : 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-200'
             }`}
             title="Filter items expiring within 1 month (30 days)"
           >
-            <span>⏳ Expiring (1 Month):</span>
+            <span>Expiring (30 Days):</span>
             <span
               className={`px-1.5 py-0.2 rounded-full font-mono text-[10px] font-black ${
                 filterExpiry === 'expiring_soon' ? 'bg-white text-amber-800' : 'bg-amber-200 text-amber-950'
@@ -276,7 +301,7 @@ export default function InventoryPage() {
             {filterExpiry === 'expiring_soon' && <span className="text-[10px] ml-0.5">✕</span>}
           </button>
 
-          {/* ⚠️ LOW STOCK ALERT BUTTON */}
+          {/* LOW STOCK ALERT BUTTON */}
           <button
             onClick={() => {
               if (filterStock === 'low') {
@@ -284,18 +309,18 @@ export default function InventoryPage() {
                 toast.success('Showing all stock items')
               } else {
                 setFilterStock('low')
-                toast('Filtered: Showing Low Stock items only', { icon: '⚠️' })
+                toast.success('Filtered: Showing Low Stock items only')
               }
               setPage(1)
             }}
-            className={`px-2.5 py-1.5 rounded-xl border text-xs font-bold transition-all flex items-center gap-1.5 shadow-soft-sm ${
+            className={`px-2.5 py-1.5 rounded-lg border text-xs font-bold transition-all flex items-center gap-1.5 shadow-2xs ${
               filterStock === 'low'
                 ? 'bg-rose-600 text-white border-rose-600 ring-2 ring-rose-300'
-                : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border-rose-200'
+                : 'bg-rose-50 hover:bg-rose-100 text-rose-800 border-rose-200'
             }`}
             title="Click to filter low stock items"
           >
-            <span>⚠️ Low Stock:</span>
+            <span>Low Stock:</span>
             <span
               className={`px-1.5 py-0.2 rounded-full font-mono text-[10px] font-black ${
                 filterStock === 'low' ? 'bg-white text-rose-700' : 'bg-rose-200 text-rose-900'
@@ -306,36 +331,46 @@ export default function InventoryPage() {
             {filterStock === 'low' && <span className="text-[10px] ml-0.5">✕</span>}
           </button>
 
-          {/* 🖨️ GENERATE / PRINT BARCODES BUTTON (NEXT TO ADD PRODUCT) */}
+          {/* GENERATE / PRINT BARCODES BUTTON */}
           <button
             onClick={() => {
               setBarcodeTargetProduct(null)
               setShowBarcodeModal(true)
             }}
-            className="btn-secondary text-xs py-1.5 px-3 shadow-soft-sm font-bold text-indigo-700 bg-indigo-50/80 hover:bg-indigo-100 border-indigo-200 flex items-center gap-1.5"
+            className="btn-secondary text-xs py-1.5 px-3 shadow-2xs font-bold text-slate-800 bg-white hover:bg-slate-50 border-slate-300 flex items-center gap-1.5"
           >
-            <span>🏷️ Generate / Print Barcodes</span>
+            <svg className="w-3.5 h-3.5 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+            <span>Print Barcodes</span>
           </button>
 
           {/* Add Product Button */}
-          <button onClick={openAdd} className="btn-primary text-xs py-1.5 px-3 shadow-soft-sm font-bold">
+          <button onClick={openAdd} className="btn-primary text-xs py-1.5 px-3 shadow-2xs font-bold bg-slate-900 hover:bg-slate-800 text-white">
             + Add Product
           </button>
         </div>
       </div>
 
       {/* ─── RESPONSIVE COMPACT SEARCH & FILTER CONTROLS ────────────────────── */}
-      <div className="card p-2.5 flex gap-2 flex-wrap items-center bg-white shadow-soft-sm border border-slate-200">
+      <div className="card p-2.5 flex gap-2 flex-wrap items-center bg-white shadow-2xs border border-slate-200">
         {/* Live Search Input with Instant Suggestion Dropdown */}
         <div ref={searchContainerRef} className="relative flex-1 min-w-48">
           <input
-            className="input text-xs pl-7 pr-6 py-1.5 bg-slate-50 border-slate-300"
-            placeholder="Type name, barcode, SKU or category to search..."
+            className="input text-xs pl-8 pr-6 py-1.5 bg-slate-50 border-slate-300 focus:bg-white"
+            placeholder="Search by name, barcode, SKU or category..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true) }}
           />
-          <span className="absolute left-2 top-2 text-xs text-slate-400">🔍</span>
+          <span className="absolute left-2.5 top-2.5 text-slate-400">
+            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </span>
           {search && (
             <button
               onClick={() => { setSearch(''); setSuggestions([]); setShowSuggestions(false) }}
@@ -560,10 +595,10 @@ export default function InventoryPage() {
                             setBarcodeTargetProduct(p)
                             setShowBarcodeModal(true)
                           }}
-                          className="text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded px-1.5 py-0.5 text-[11px] font-semibold"
+                          className="text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded px-1.5 py-0.5 text-[11px] font-semibold"
                           title="Generate & print barcode sticker for this item"
                         >
-                          🏷️ Label
+                          Label
                         </button>
                       )}
                       <button
@@ -655,9 +690,9 @@ export default function InventoryPage() {
                         setForm({ ...form, barcode: code })
                         toast.success(`Generated: ${code}`)
                       }}
-                      className="text-[10px] font-bold text-indigo-600 hover:text-indigo-800 hover:underline"
+                      className="text-[10px] font-bold text-slate-700 hover:text-slate-900 hover:underline"
                     >
-                      ⚡ Auto
+                      Auto
                     </button>
                   </div>
                   <input
@@ -767,13 +802,58 @@ export default function InventoryPage() {
                     onChange={(e) => setForm({ ...form, salePrice: e.target.value })}
                   />
                 </div>
+                {/* Measurement Unit Quantity/Size & Unit Dropdown Selector */}
                 <div>
-                  <label className="label-title">Unit (kg, pcs, litre, hali)</label>
-                  <input
-                    className="input text-xs"
-                    value={form.unit}
-                    onChange={(e) => setForm({ ...form, unit: e.target.value })}
-                  />
+                  <label className="label-title">Unit / Pack Size (পরিমাপ ও একক) *</label>
+                  <div className="flex gap-1.5 items-center">
+                    {/* 1. Numeric Unit Value / Net Weight Box */}
+                    <div className="w-24 shrink-0">
+                      <input
+                        type="number"
+                        step="any"
+                        min="0.01"
+                        className="input text-xs font-mono font-bold text-slate-900 bg-white border-slate-300 w-full"
+                        placeholder="1, 250, 500"
+                        value={unitQty}
+                        onChange={(e) => {
+                          const val = e.target.value
+                          setUnitQty(val)
+                          setForm({ ...form, unit: combineUnit(val, unitType) })
+                        }}
+                        required
+                      />
+                    </div>
+
+                    {/* 2. Unit Measurement Dropdown */}
+                    <div className="flex-1 min-w-0">
+                      <select
+                        className="input text-xs font-bold bg-white border-slate-300 text-slate-900 w-full"
+                        value={unitType}
+                        onChange={(e) => {
+                          const val = e.target.value
+                          setUnitType(val)
+                          setForm({ ...form, unit: combineUnit(unitQty, val) })
+                        }}
+                      >
+                        <option value="pcs">pcs (পিস / Piece)</option>
+                        <option value="kg">kg (কেজি / Kilogram)</option>
+                        <option value="gm">gm (গ্রাম / Gram)</option>
+                        <option value="mg">mg (মিলিগ্রাম / Milligram)</option>
+                        <option value="litre">litre (লিটার / Litre)</option>
+                        <option value="ml">ml (মিলি / Millilitre)</option>
+                        <option value="pack">pack (প্যাকেট / Packet)</option>
+                        <option value="box">box (বক্স / কার্টুন)</option>
+                        <option value="hali">hali (হালি / ৪ পিস)</option>
+                        <option value="dozen">dozen (ডজন / ১২ পিস)</option>
+                        <option value="bottle">bottle (বোতল / Bottle)</option>
+                        <option value="can">can (ক্যান / Can)</option>
+                        <option value="sachet">sachet (মিনি প্যাক)</option>
+                      </select>
+                    </div>
+                  </div>
+                  <span className="text-[10px] text-slate-500 mt-1 block font-mono">
+                    Unit: <strong className="text-indigo-700">{combineUnit(unitQty, unitType)}</strong> (যেমন: 250 gm, 500 ml, 1 kg, 20 pcs)
+                  </span>
                 </div>
                 <div>
                   <label className="label-title">Current Shelf Stock</label>

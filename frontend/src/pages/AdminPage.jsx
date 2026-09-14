@@ -187,78 +187,68 @@ export default function AdminPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* ─── LEFT COLUMN: SETTINGS FORM (7 COLS) ─────────────────────────── */}
         <div className="lg:col-span-7 space-y-5">
-          <form onSubmit={handleSaveSettings} className="card p-6 bg-white shadow-soft-sm border border-slate-200 space-y-5">
-            {/* 👑 SUPER ADMIN APP BRAND & LOGO SECTION */}
-            <div className={`p-4 rounded-xl border space-y-4 ${
-              isSuperAdmin ? 'bg-purple-50/50 border-purple-200' : 'bg-slate-50 border-slate-200'
-            }`}>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <span className="text-base">👑</span>
-                  <h3 className="font-bold text-xs text-slate-900 uppercase tracking-wider">
-                    App Brand & Logo Identity
-                  </h3>
+          <form onSubmit={handleSaveSettings} className="card p-6 bg-white shadow-2xs border border-slate-200 space-y-5">
+            {/* APP BRAND & LOGO SECTION — ONLY VISIBLE TO SUPER ADMIN */}
+            {isSuperAdmin && (
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 space-y-4">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="font-bold text-xs text-slate-900 uppercase tracking-wider">
+                      App Brand & Logo Identity
+                    </h3>
+                    <p className="text-[11px] text-slate-500">Master brand name and logo configuration</p>
+                  </div>
+                  <span className="text-[10px] text-slate-700 font-semibold bg-slate-200 px-2 py-0.5 rounded">
+                    Super Admin Only
+                  </span>
                 </div>
-                {isSuperAdmin ? (
-                  <span className="text-[10px] text-purple-700 font-semibold bg-purple-100 px-2 py-0.5 rounded">
-                    Super Admin Controlled
-                  </span>
-                ) : (
-                  <span className="text-[10px] text-slate-500 bg-slate-200 px-2 py-0.5 rounded">
-                    Managed by Super Admin
-                  </span>
-                )}
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                  <div>
+                    <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                      App Brand Name *
+                    </label>
+                    <input
+                      className="input text-xs w-full font-bold bg-white border-slate-300"
+                      required
+                      placeholder="e.g. Smart Buy / Supershop"
+                      value={settings.shopName}
+                      onChange={(e) => setSettings({ ...settings, shopName: e.target.value })}
+                    />
+                    <span className="text-[10px] text-slate-400 mt-0.5 block">
+                      Displayed in sidebar, window title & top header
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                      Tagline / Subtitle
+                    </label>
+                    <input
+                      className="input text-xs w-full bg-white border-slate-300"
+                      placeholder="e.g. Supershop & Departmental Store"
+                      value={settings.shopSubtitle}
+                      onChange={(e) => setSettings({ ...settings, shopSubtitle: e.target.value })}
+                    />
+                    <span className="text-[10px] text-slate-400 mt-0.5 block">
+                      Secondary subtitle for branding
+                    </span>
+                  </div>
+                </div>
+
+                {/* Logo Upload & Preview */}
                 <div>
-                  <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block mb-1">
-                    App Brand Name *
+                  <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block mb-1.5">
+                    Custom App & Receipt Logo
                   </label>
-                  <input
-                    className="input text-xs w-full font-bold bg-white border-slate-300 disabled:bg-slate-100"
-                    required
-                    disabled={!isSuperAdmin}
-                    placeholder="e.g. Smart Buy / Supershop"
-                    value={settings.shopName}
-                    onChange={(e) => setSettings({ ...settings, shopName: e.target.value })}
-                  />
-                  <span className="text-[10px] text-slate-400 mt-0.5 block">
-                    Displayed in sidebar, window title & top header
-                  </span>
-                </div>
-
-                <div>
-                  <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block mb-1">
-                    Tagline / Subtitle
-                  </label>
-                  <input
-                    className="input text-xs w-full bg-white border-slate-300 disabled:bg-slate-100"
-                    disabled={!isSuperAdmin}
-                    placeholder="e.g. Supershop & Departmental Store"
-                    value={settings.shopSubtitle}
-                    onChange={(e) => setSettings({ ...settings, shopSubtitle: e.target.value })}
-                  />
-                  <span className="text-[10px] text-slate-400 mt-0.5 block">
-                    Secondary subtitle for branding
-                  </span>
-                </div>
-              </div>
-
-              {/* Logo Upload & Preview */}
-              <div>
-                <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block mb-1.5">
-                  Custom App & Receipt Logo
-                </label>
-                <div className="flex items-center gap-4 flex-wrap">
-                  {settings.shopLogo ? (
-                    <div className="relative group">
-                      <img
-                        src={settings.shopLogo}
-                        alt="Logo Preview"
-                        className="w-14 h-14 rounded-xl object-cover border border-slate-300 shadow-soft-sm bg-white"
-                      />
-                      {isSuperAdmin && (
+                  <div className="flex items-center gap-4 flex-wrap">
+                    {settings.shopLogo ? (
+                      <div className="relative group">
+                        <img
+                          src={settings.shopLogo}
+                          alt="Logo Preview"
+                          className="w-14 h-14 rounded-xl object-cover border border-slate-300 shadow-2xs bg-white"
+                        />
                         <button
                           type="button"
                           onClick={handleRemoveLogo}
@@ -267,15 +257,13 @@ export default function AdminPage() {
                         >
                           ×
                         </button>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="w-14 h-14 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold font-mono text-sm shadow-soft-sm">
-                      {settings.shopName ? settings.shopName.substring(0, 2).toUpperCase() : 'SB'}
-                    </div>
-                  )}
+                      </div>
+                    ) : (
+                      <div className="w-14 h-14 rounded-xl bg-slate-800 flex items-center justify-center text-white font-bold font-mono text-sm shadow-2xs">
+                        {settings.shopName ? settings.shopName.substring(0, 2).toUpperCase() : 'SB'}
+                      </div>
+                    )}
 
-                  {isSuperAdmin && (
                     <div className="space-y-1">
                       <input
                         type="file"
@@ -289,16 +277,16 @@ export default function AdminPage() {
                         onClick={() => logoInputRef.current?.click()}
                         className="btn-secondary text-xs py-1.5 px-3 font-semibold"
                       >
-                        📁 Choose Logo Image (PNG/JPG)
+                        Choose Logo Image (PNG/JPG)
                       </button>
                       <div className="text-[10px] text-slate-400">
                         Max 2MB. Applied to sidebar, receipts, and login screen.
                       </div>
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* INVOICE & RECEIPT DETAILS SECTION */}
             <div className="space-y-3.5 pt-2">

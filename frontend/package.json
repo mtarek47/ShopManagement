@@ -42,7 +42,7 @@
   },
   "build": {
     "appId": "com.demoshop.pos",
-    "productName": "Demo Shop POS",
+    "productName": "Smart Buy POS",
     "directories": {
       "output": "dist-electron"
     },
@@ -57,7 +57,15 @@
         "to": "backend",
         "filter": [
           "**/*",
-          "!backups/*"
+          "!backups/*",
+          "!node_modules/.cache"
+        ]
+      },
+      {
+        "from": "../pgsql-win64",
+        "to": "pgsql",
+        "filter": [
+          "**/*"
         ]
       }
     ],
@@ -70,13 +78,22 @@
     },
     "win": {
       "target": [
-        "nsis",
-        "portable"
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
       ]
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "Smart Buy POS"
     }
   }
 }
