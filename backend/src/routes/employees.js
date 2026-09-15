@@ -12,11 +12,7 @@ router.use(verifyToken);
 // RULE: Regular ADMIN/MANAGER cannot see SUPER_ADMIN accounts! Only SUPER_ADMIN can see SUPER_ADMIN accounts.
 router.get('/', requireRole('ADMIN'), async (req, res) => {
   try {
-    const isSuperAdmin = req.user.role === 'SUPER_ADMIN';
-    const where = isSuperAdmin ? {} : { role: { not: 'SUPER_ADMIN' } };
-
     const employees = await prisma.user.findMany({
-      where,
       select: { id: true, name: true, phone: true, role: true, isActive: true, createdAt: true },
       orderBy: { name: 'asc' },
     });

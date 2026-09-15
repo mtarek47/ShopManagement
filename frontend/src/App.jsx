@@ -54,29 +54,29 @@ function App() {
         <Route path="pos" element={<POSPage />} />
         <Route path="inventory" element={<InventoryPage />} />
         <Route path="suppliers" element={
-          <ProtectedRoute allowedRoles={['ADMIN', 'MANAGER']}>
+          <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'ADMIN', 'MANAGER']}>
             <SuppliersPage />
           </ProtectedRoute>
         } />
         <Route path="purchases" element={
-          <ProtectedRoute allowedRoles={['ADMIN', 'MANAGER']}>
+          <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'ADMIN', 'MANAGER']}>
             <PurchasesPage />
           </ProtectedRoute>
         } />
         <Route path="customers" element={<CustomersPage />} />
         <Route path="reports" element={
-          <ProtectedRoute allowedRoles={['ADMIN', 'MANAGER']}>
+          <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'ADMIN', 'MANAGER']}>
             <ReportsPage />
           </ProtectedRoute>
         } />
         <Route path="shifts" element={<ShiftsPage />} />
         <Route path="employees" element={
-          <ProtectedRoute allowedRoles={['ADMIN']}>
+          <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'ADMIN']}>
             <EmployeesPage />
           </ProtectedRoute>
         } />
         <Route path="admin" element={
-          <ProtectedRoute allowedRoles={['ADMIN']}>
+          <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'ADMIN']}>
             <AdminPage />
           </ProtectedRoute>
         } />

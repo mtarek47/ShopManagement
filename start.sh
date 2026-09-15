@@ -4,5 +4,5 @@
 lsof -ti:5000 | xargs kill -9 2>/dev/null || true
 lsof -ti:3000 | xargs kill -9 2>/dev/null || true
 
-echo "🚀 Starting Smart Buy POS (Backend & Frontend Desktop App)..."
+echo "🚀 Starting Smart Buy POS (Backend & Frontend Web App)..."
 npm start

@@ -2,7 +2,9 @@
 
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
-require('dotenv').config({ path: '../backend/.env' });
+try {
+  require('dotenv').config({ path: '../backend/.env' });
+} catch (_) {}
 
 const prisma = new PrismaClient();
 
@@ -13,7 +15,12 @@ async function main() {
   const superAdminHash = await bcrypt.hash('superadmin123', 12);
   const masterSuperAdmin = await prisma.user.upsert({
     where: { phone: '01999999999' },
-    update: { role: 'SUPER_ADMIN', isActive: true },
+    update: {
+      name: 'Master Super Admin',
+      role: 'SUPER_ADMIN',
+      isActive: true,
+      passwordHash: superAdminHash,
+    },
     create: {
       name: 'Master Super Admin',
       phone: '01999999999',
@@ -28,7 +35,12 @@ async function main() {
   const passwordHash = await bcrypt.hash('admin123', 12);
   const admin = await prisma.user.upsert({
     where: { phone: '01700000000' },
-    update: { role: 'ADMIN', isActive: true },
+    update: {
+      name: 'Admin',
+      role: 'ADMIN',
+      isActive: true,
+      passwordHash: passwordHash,
+    },
     create: {
       name: 'Admin',
       phone: '01700000000',
@@ -252,7 +264,7 @@ async function main() {
       name: 'Pran Frooto Mango Drink 250ml',
       sku: 'BEV-FROOTO-250',
       barcode: '8901234561003',
-      categoryId: categories['Packaged & Beverage (প্যাকেটজাত)'].id,
+      categoryId: categories['Beverages (পানীয় ও জুস)'].id,
       brandId: brands['Pran'].id,
       costPrice: 22.00,
       salePrice: 28.00,

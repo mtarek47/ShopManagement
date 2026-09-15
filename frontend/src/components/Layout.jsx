@@ -60,15 +60,15 @@ const Icons = {
 }
 
 const navItems = [
-  { path: '/pos',        label: 'Billing Counter', icon: Icons.POS,       roles: ['ADMIN', 'MANAGER', 'CASHIER'], highlight: true },
-  { path: '/inventory',  label: 'Inventory',       icon: Icons.Inventory, roles: ['ADMIN', 'MANAGER', 'CASHIER'] },
-  { path: '/purchases',  label: 'Stock In / PO',   icon: Icons.Purchases, roles: ['ADMIN', 'MANAGER'] },
-  { path: '/suppliers',  label: 'Suppliers',       icon: Icons.Suppliers, roles: ['ADMIN', 'MANAGER'] },
-  { path: '/customers',  label: 'Customers',       icon: Icons.Customers, roles: ['ADMIN', 'MANAGER', 'CASHIER'] },
-  { path: '/reports',    label: 'Analytics',       icon: Icons.Reports,   roles: ['ADMIN', 'MANAGER'] },
-  { path: '/shifts',     label: 'Cash Shifts',     icon: Icons.Shifts,    roles: ['ADMIN', 'MANAGER', 'CASHIER'] },
-  { path: '/employees',  label: 'Staff Access',    icon: Icons.Employees, roles: ['ADMIN'] },
-  { path: '/admin',      label: 'Settings',        icon: Icons.Admin,     roles: ['ADMIN'] },
+  { path: '/pos',        label: 'Billing Counter', icon: Icons.POS,       roles: ['SUPER_ADMIN', 'ADMIN', 'MANAGER', 'CASHIER'], highlight: true },
+  { path: '/inventory',  label: 'Inventory',       icon: Icons.Inventory, roles: ['SUPER_ADMIN', 'ADMIN', 'MANAGER', 'CASHIER'] },
+  { path: '/purchases',  label: 'Stock In / PO',   icon: Icons.Purchases, roles: ['SUPER_ADMIN', 'ADMIN', 'MANAGER'] },
+  { path: '/suppliers',  label: 'Suppliers',       icon: Icons.Suppliers, roles: ['SUPER_ADMIN', 'ADMIN', 'MANAGER'] },
+  { path: '/customers',  label: 'Customers',       icon: Icons.Customers, roles: ['SUPER_ADMIN', 'ADMIN', 'MANAGER', 'CASHIER'] },
+  { path: '/reports',    label: 'Analytics',       icon: Icons.Reports,   roles: ['SUPER_ADMIN', 'ADMIN', 'MANAGER'] },
+  { path: '/shifts',     label: 'Cash Shifts',     icon: Icons.Shifts,    roles: ['SUPER_ADMIN', 'ADMIN', 'MANAGER', 'CASHIER'] },
+  { path: '/employees',  label: 'Staff Access',    icon: Icons.Employees, roles: ['SUPER_ADMIN', 'ADMIN'] },
+  { path: '/admin',      label: 'Settings',        icon: Icons.Admin,     roles: ['SUPER_ADMIN', 'ADMIN'] },
 ]
 
 export default function Layout() {

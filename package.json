@@ -9,9 +9,13 @@
     "database"
   ],
   "scripts": {
-    "start": "concurrently -n \"BACKEND,ELECTRON\" -c \"cyan,green\" \"npm run dev:backend\" \"npm run dev:electron\"",
+    "start": "npm run start:web",
     "start:web": "concurrently -n \"BACKEND,VITE\" -c \"cyan,green\" \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev": "concurrently -n \"BACKEND,ELECTRON\" -c \"cyan,green\" \"npm run dev:backend\" \"npm run dev:electron\"",
+    "start:electron": "concurrently -n \"BACKEND,ELECTRON\" -c \"cyan,green\" \"npm run dev:backend\" \"npm run dev:electron\"",
+    "dev": "npm run start:web",
+    "docker:up": "docker compose --env-file .env.docker up -d --build",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:electron": "cd frontend && npm run electron:dev",

@@ -7,11 +7,15 @@ const prisma = require('./config/database');
 const { initBackupCron } = require('./services/backup');
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 5000;
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
 app.use(helmet());
-app.use(cors({ origin: ['http://localhost:3000', 'file://'] }));
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim())
+  : true;
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(morgan('dev'));
 app.use(express.json({ limit: '10mb' }));
 
@@ -51,27 +55,58 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, message: 'Internal server error', error: process.env.NODE_ENV === 'development' ? err.message : undefined });
 });
 
-// ─── Auto-seed Master Super Admin (Root Master Account) ────────────────────────
-async function ensureMasterSuperAdmin() {
+// ─── Auto-seed Master Super Admin & Store Admin ──────────────────────────────
+async function ensureRootAccounts() {
+  const bcrypt = require('bcryptjs');
+
+  // 1. Master Super Admin (01999999999 / superadmin123)
   try {
-    const bcrypt = require('bcryptjs');
     const masterPhone = '01999999999';
-    const existing = await prisma.user.findUnique({ where: { phone: masterPhone } });
-    if (!existing) {
-      const passwordHash = await bcrypt.hash('superadmin123', 12);
-      await prisma.user.create({
-        data: {
-          name: 'Master Super Admin',
-          phone: masterPhone,
-          passwordHash,
-          role: 'SUPER_ADMIN',
-          isActive: true,
-        },
-      });
-      console.log('👑 [Auth Seed] Auto-seeded Master Super Admin root account (01999999999 / superadmin123)');
-    }
+    const masterHash = await bcrypt.hash('superadmin123', 12);
+    const superAdmin = await prisma.user.upsert({
+      where: { phone: masterPhone },
+      update: {
+        name: 'Master Super Admin',
+        role: 'SUPER_ADMIN',
+        isActive: true,
+        passwordHash: masterHash,
+      },
+      create: {
+        name: 'Master Super Admin',
+        phone: masterPhone,
+        passwordHash: masterHash,
+        role: 'SUPER_ADMIN',
+        isActive: true,
+      },
+    });
+    console.log(`👑 [Auth Seed] Master Super Admin verified (${superAdmin.phone} / superadmin123)`);
   } catch (err) {
     console.error('Failed to ensure Master Super Admin:', err.message);
+  }
+
+  // 2. Default Store Admin (01700000000 / admin123)
+  try {
+    const adminPhone = '01700000000';
+    const adminHash = await bcrypt.hash('admin123', 12);
+    const admin = await prisma.user.upsert({
+      where: { phone: adminPhone },
+      update: {
+        name: 'Admin',
+        role: 'ADMIN',
+        isActive: true,
+        passwordHash: adminHash,
+      },
+      create: {
+        name: 'Admin',
+        phone: adminPhone,
+        passwordHash: adminHash,
+        role: 'ADMIN',
+        isActive: true,
+      },
+    });
+    console.log(`✅ [Auth Seed] Store Admin verified (${admin.phone} / admin123)`);
+  } catch (err) {
+    console.error('Failed to ensure Store Admin:', err.message);
   }
 }
 
@@ -80,7 +115,7 @@ async function start() {
   try {
     await prisma.$connect();
     console.log('✅ Database connected');
-    await ensureMasterSuperAdmin();
+    await ensureRootAccounts();
     initBackupCron();
     const { syncAllHistoricalAnalytics } = require('./services/analyticsLedger');
     syncAllHistoricalAnalytics().catch((e) => console.error('Initial analytics sync failed:', e));
